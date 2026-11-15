@@ -1,0 +1,81 @@
+/* theme.css —— 《妆奁千年》全局设计令牌
+ * 颜色取自正式背景图的绢色、铜镜暗金与朱砂，避免纯度更高的现代配色。
+ */
+:root {
+  --paper: #f5ebdd;
+  --paper-light: #faf3e8;
+  --ink: #493a32;
+  --ink-secondary: #79685b;
+  --gold-muted: #a58a61;
+  --gold-line: #d3c1a5;
+  --vermilion-muted: #995e50;
+  --selection: #b18a67;
+
+  /* 场景留边：取自背景上缘与下缘的实际颜色 */
+  --edge-top: #eec9ad;
+  --edge-bottom: #a5694d;
+
+  --drawer-bg: rgba(249, 242, 231, 0.965);
+  --drawer-width: 362px;
+  --drawer-pad: 28px;
+
+  --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong",
+    "SimSun", "Times New Roman", serif;
+
+  --ease: cubic-bezier(0.24, 0.7, 0.24, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background:
+    linear-gradient(to bottom, var(--edge-top) 0%, var(--edge-bottom) 100%);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.9;
+  letter-spacing: 0.01em;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 1px solid var(--gold-muted);
+  outline-offset: 3px;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+figure,
+blockquote {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}

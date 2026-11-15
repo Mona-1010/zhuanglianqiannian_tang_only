@@ -1,0 +1,869 @@
+/* tang.css —— 唐代梳妆场景
+ * 场景以固定逻辑尺寸 1672×941 绘制，整体等比缩放适配视口；
+ * 背景、镜中人物、热区共用同一个坐标容器，绝不各自缩放。
+ */
+
+/* ============================ 场景 ============================ */
+.stage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 1672px;
+  height: 941px;
+  transform-origin: 0 0;
+  overflow: hidden;
+  user-select: none;
+}
+
+.stage__bg {
+  position: absolute;
+  inset: 0;
+  width: 1672px;
+  height: 941px;
+  display: block;
+  pointer-events: none;
+}
+
+/* ============================ 镜中人物 ============================ */
+.mirror {
+  position: absolute;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.portrait {
+  position: absolute;
+  width: 1199px;
+  height: 1312px;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.portrait__layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1199px;
+  height: 1312px;
+  display: block;
+  pointer-events: none;
+  transition: opacity 200ms var(--ease);
+}
+
+/* 镜面本身的温暖光泽，柔和叠加在人物之上 */
+.mirror__sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 34% 18%, rgba(255, 244, 226, 0.22), transparent 62%),
+    radial-gradient(90% 80% at 78% 92%, rgba(146, 92, 58, 0.16), transparent 70%);
+  mix-blend-mode: soft-light;
+}
+
+.mirror__vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 90px 26px rgba(120, 76, 48, 0.2);
+}
+
+/* ============================ 透明热区 ============================ */
+.hotspots {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+}
+
+.hotspot {
+  fill: rgba(255, 255, 255, 0);
+  stroke: rgba(165, 138, 97, 0);
+  stroke-width: 1.5;
+  stroke-dasharray: none;
+  transition: fill 220ms var(--ease), stroke 220ms var(--ease);
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.hotspot:hover,
+.hotspot:focus-visible {
+  fill: rgba(255, 246, 232, 0.13);
+  stroke: rgba(165, 138, 97, 0.55);
+  stroke-dasharray: 5 5;
+  outline: none;
+}
+
+.hotspot.is-active {
+  fill: rgba(255, 246, 232, 0.08);
+  stroke: rgba(165, 138, 97, 0.34);
+}
+
+.hotspot--ring {
+  fill: none;
+  stroke: rgba(165, 138, 97, 0);
+  stroke-width: 44px;
+  stroke-dasharray: none;
+  pointer-events: stroke;
+}
+
+.hotspot--ring:hover,
+.hotspot--ring:focus-visible {
+  fill: none;
+  stroke: rgba(165, 138, 97, 0.3);
+  stroke-dasharray: none;
+}
+
+/* 悬停时的小名称提示 */
+.hotspot-label {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  padding: 3px 11px 4px;
+  font-size: 12.5px;
+  letter-spacing: 0.18em;
+  line-height: 1.6;
+  white-space: nowrap;
+  color: var(--ink);
+  background: rgba(250, 243, 232, 0.93);
+  border: 1px solid rgba(211, 193, 165, 0.9);
+  box-shadow: 0 6px 18px -12px rgba(73, 58, 50, 0.6);
+  opacity: 0;
+  transition: opacity 180ms var(--ease);
+  pointer-events: none;
+}
+
+.hotspot-label.is-on {
+  opacity: 1;
+}
+
+/* ============================ 项目标识 ============================ */
+.masthead {
+  position: fixed;
+  top: 30px;
+  left: 34px;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.masthead__brand {
+  pointer-events: auto;
+  text-shadow: 0 1px 0 rgba(250, 240, 226, 0.55);
+}
+
+.masthead__title {
+  font-size: 22px;
+  letter-spacing: 0.24em;
+  line-height: 1.5;
+  color: #45342a;
+}
+
+.masthead__sub {
+  margin-top: 2px;
+  font-size: 12.5px;
+  letter-spacing: 0.3em;
+  color: rgba(69, 52, 42, 0.72);
+}
+
+.masthead__aside {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-left: 20px;
+  border-left: 1px solid rgba(120, 92, 62, 0.28);
+  margin-top: 4px;
+}
+
+.text-btn {
+  font-size: 12.5px;
+  letter-spacing: 0.2em;
+  color: rgba(69, 52, 42, 0.82);
+  padding: 2px 0;
+  border-bottom: 1px solid transparent;
+  transition: color 180ms var(--ease), border-color 180ms var(--ease);
+  text-shadow: 0 1px 0 rgba(250, 240, 226, 0.5);
+}
+
+.text-btn:hover {
+  color: var(--vermilion-muted);
+  border-color: rgba(153, 94, 80, 0.5);
+}
+
+.text-btn[disabled] {
+  opacity: 0.4;
+  cursor: default;
+  color: rgba(69, 52, 42, 0.82);
+  border-color: transparent;
+}
+
+/* ============================ 右侧抽屉 ============================ */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: var(--drawer-width);
+  display: flex;
+  flex-direction: column;
+  z-index: 30;
+  background: var(--drawer-bg);
+  border-left: 1px solid rgba(165, 138, 97, 0.55);
+  box-shadow: -26px 0 54px -34px rgba(62, 42, 28, 0.6);
+  transform: translateX(101.5%);
+  transition: transform 300ms var(--ease);
+  will-change: transform;
+}
+
+.drawer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='0.55'/></svg>");
+}
+
+.drawer.is-open {
+  transform: translateX(0);
+}
+
+.drawer__head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 26px var(--drawer-pad) 0;
+}
+
+.drawer__kicker {
+  font-size: 12.5px;
+  letter-spacing: 0.26em;
+  color: var(--ink-secondary);
+}
+
+.icon-btn {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  color: var(--ink-secondary);
+  transition: color 180ms var(--ease);
+}
+
+.icon-btn:hover {
+  color: var(--vermilion-muted);
+}
+
+.icon-btn svg {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+  stroke-width: 1.1;
+  fill: none;
+}
+
+.drawer__body {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0 var(--drawer-pad);
+}
+
+.drawer__scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 18px 0 26px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(165, 138, 97, 0.45) transparent;
+}
+
+.drawer__scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.drawer__scroll::-webkit-scrollbar-thumb {
+  background: rgba(165, 138, 97, 0.4);
+  border-radius: 2px;
+}
+
+.drawer__foot {
+  padding: 14px 0 28px;
+  border-top: 1px solid rgba(211, 193, 165, 0.75);
+  margin-top: auto;
+}
+
+/* 通用文字层级 */
+.title-lg {
+  font-size: 27px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.title-md {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  line-height: 1.6;
+}
+
+.rule {
+  height: 1px;
+  margin: 14px 0 20px;
+  background: linear-gradient(
+    to right,
+    rgba(165, 138, 97, 0.7),
+    rgba(211, 193, 165, 0.25) 62%,
+    transparent
+  );
+}
+
+.lede {
+  font-size: 14.5px;
+  line-height: 1.95;
+  color: var(--ink-secondary);
+}
+
+.meta-line {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: rgba(121, 104, 91, 0.85);
+}
+
+.section-label {
+  font-size: 15px;
+  letter-spacing: 0.2em;
+  color: var(--ink);
+}
+
+.placeholder-note {
+  font-size: 13px;
+  line-height: 1.9;
+  color: rgba(121, 104, 91, 0.8);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 20px;
+  font-size: 13.5px;
+  letter-spacing: 0.22em;
+  color: var(--vermilion-muted);
+  border: 1px solid rgba(153, 94, 80, 0.62);
+  background: rgba(153, 94, 80, 0.045);
+  transition: background-color 200ms var(--ease), color 200ms var(--ease);
+}
+
+.btn-primary:hover {
+  background: rgba(153, 94, 80, 0.14);
+  color: #7d4a3e;
+}
+
+.btn-primary .arrow {
+  font-size: 13px;
+  letter-spacing: 0;
+  transform: translateY(-1px);
+}
+
+.link-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  color: var(--vermilion-muted);
+  border-bottom: 1px solid rgba(153, 94, 80, 0.35);
+  padding-bottom: 2px;
+  transition: border-color 180ms var(--ease);
+}
+
+.link-more:hover {
+  border-color: rgba(153, 94, 80, 0.85);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  letter-spacing: 0.14em;
+  color: var(--ink-secondary);
+  transition: color 180ms var(--ease);
+}
+
+.back-link:hover {
+  color: var(--vermilion-muted);
+}
+
+.back-link .arrow {
+  font-size: 13px;
+}
+
+/* -------- 第一层：妆具介绍 -------- */
+.tool-intro__name {
+  margin-top: 26px;
+}
+
+.tool-intro__cat {
+  margin-top: 6px;
+  font-size: 12.5px;
+  letter-spacing: 0.2em;
+  color: var(--ink-secondary);
+}
+
+.archive-slot {
+  margin-top: 22px;
+  padding-left: 16px;
+  border-left: 1px solid rgba(211, 193, 165, 0.9);
+}
+
+.archive-slot__title {
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  color: var(--ink-secondary);
+}
+
+.archive-slot__body {
+  margin-top: 8px;
+  font-size: 13.5px;
+  line-height: 1.95;
+  color: rgba(121, 104, 91, 0.92);
+}
+
+.tool-intro__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.tool-intro__foot .hint {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: rgba(121, 104, 91, 0.72);
+}
+
+/* -------- 第二层：妆容选择 -------- */
+.selector__head {
+  margin-top: 20px;
+}
+
+.selector__lead {
+  margin-top: 8px;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--ink-secondary);
+}
+
+.subgroup-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin: 20px 0 4px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(211, 193, 165, 0.6);
+}
+
+.subgroup-tab {
+  position: relative;
+  font-size: 13.5px;
+  letter-spacing: 0.2em;
+  color: rgba(121, 104, 91, 0.85);
+  padding-bottom: 4px;
+  transition: color 180ms var(--ease);
+}
+
+.subgroup-tab:hover {
+  color: var(--ink);
+}
+
+.subgroup-tab.is-on {
+  color: var(--ink);
+}
+
+.subgroup-tab.is-on::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -9px;
+  height: 1px;
+  background: var(--gold-muted);
+}
+
+.subgroup-tab__count {
+  font-size: 11px;
+  letter-spacing: 0;
+  color: rgba(121, 104, 91, 0.6);
+  margin-left: 5px;
+}
+
+.opt-list {
+  margin-top: 14px;
+}
+
+.opt-list--grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 20px;
+}
+
+.opt {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  padding: 11px 2px 11px 0;
+  text-align: left;
+  border-bottom: 1px solid rgba(211, 193, 165, 0.55);
+  transition: background-color 200ms var(--ease);
+}
+
+.opt::before {
+  content: "";
+  position: absolute;
+  left: -12px;
+  top: 12px;
+  bottom: 12px;
+  width: 1px;
+  background: transparent;
+  transition: background-color 200ms var(--ease);
+}
+
+.opt:hover::before {
+  background: rgba(177, 138, 103, 0.5);
+}
+
+.opt.is-on::before {
+  background: var(--selection);
+}
+
+.opt__thumb {
+  position: relative;
+  overflow: hidden;
+  display: block;
+}
+
+.opt__thumb img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  pointer-events: none;
+}
+
+.opt__name {
+  font-size: 15.5px;
+  letter-spacing: 0.08em;
+  color: rgba(73, 58, 50, 0.88);
+  transition: color 180ms var(--ease);
+}
+
+.opt:hover .opt__name {
+  color: var(--ink);
+}
+
+.opt.is-on .opt__name {
+  color: var(--ink);
+}
+
+.opt__mark {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: transparent;
+  transition: background-color 180ms var(--ease);
+}
+
+.opt.is-on .opt__mark {
+  background: var(--selection);
+}
+
+.selector__current {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(211, 193, 165, 0.8);
+}
+
+.selector__current-name {
+  font-size: 16.5px;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+}
+
+.selector__current.is-empty .selector__current-name {
+  color: rgba(121, 104, 91, 0.7);
+  font-size: 13.5px;
+  letter-spacing: 0.1em;
+}
+
+.selector__note {
+  margin-top: 18px;
+  font-size: 12.5px;
+  line-height: 1.9;
+  color: rgba(121, 104, 91, 0.9);
+  padding-left: 14px;
+  border-left: 1px solid rgba(211, 193, 165, 0.9);
+}
+
+/* -------- 第三层：妆容介绍 -------- */
+.makeup-intro__title {
+  margin-top: 22px;
+}
+
+.makeup-intro__ids {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  color: rgba(121, 104, 91, 0.8);
+}
+
+.makeup-intro__ids span {
+  font-variant-numeric: tabular-nums;
+}
+
+.doc-block {
+  margin-top: 26px;
+}
+
+.doc-block__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid rgba(211, 193, 165, 0.7);
+}
+
+.doc-block__title {
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  color: var(--ink);
+}
+
+.doc-block__tag {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: rgba(121, 104, 91, 0.72);
+}
+
+.doc-block__body {
+  padding-top: 12px;
+  font-size: 14px;
+  line-height: 1.95;
+  color: var(--ink-secondary);
+}
+
+.doc-figure {
+  margin-top: 12px;
+  height: 108px;
+  border: 1px dashed rgba(165, 138, 97, 0.5);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: rgba(121, 104, 91, 0.7);
+}
+
+.doc-sources li {
+  font-size: 12.5px;
+  line-height: 1.9;
+  color: rgba(121, 104, 91, 0.85);
+  padding-left: 14px;
+  position: relative;
+}
+
+.doc-sources li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12px;
+  width: 6px;
+  height: 1px;
+  background: rgba(165, 138, 97, 0.8);
+}
+
+/* -------- 妆容状态一览（右下角） -------- */
+.state-strip {
+  position: fixed;
+  left: 34px;
+  bottom: 24px;
+  z-index: 20;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px 14px;
+  max-width: min(52vw, 620px);
+  overflow: hidden;
+  white-space: nowrap;
+  pointer-events: none;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: rgba(250, 242, 230, 0.92);
+  text-shadow: 0 1px 2px rgba(58, 35, 23, 0.6);
+}
+
+body[data-drawer-open="true"] .state-strip {
+  opacity: 0;
+}
+
+.state-strip__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.state-strip__dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 240, 225, 0.75);
+}
+
+.state-strip.is-empty {
+  opacity: 0;
+  transition: opacity 240ms var(--ease);
+}
+
+.state-strip {
+  transition: opacity 240ms var(--ease);
+}
+
+/* ============================ 调试模式 ============================ */
+.debug .hotspot {
+  fill: rgba(0, 150, 170, 0.1);
+  stroke: #0d8f9e;
+  stroke-width: 1.5;
+  stroke-dasharray: 7 4;
+}
+
+.debug .hotspot--ring {
+  fill: none;
+  stroke: rgba(13, 143, 158, 0.8);
+  stroke-dasharray: 4 6;
+}
+
+.debug .mirror {
+  outline: 1.5px dashed rgba(200, 40, 40, 0.85);
+  outline-offset: 0;
+}
+
+.debug .portrait {
+  outline: 1px dashed rgba(40, 90, 200, 0.7);
+}
+
+.debug-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: #0d7d8b;
+  background: rgba(255, 255, 255, 0.75);
+  padding: 1px 5px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.debug-hint {
+  position: fixed;
+  right: 16px;
+  bottom: 12px;
+  z-index: 40;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(20, 60, 70, 0.7);
+  padding: 4px 10px;
+}
+
+/* ============================ 响应式 ============================ */
+@media (max-width: 1180px) {
+  :root {
+    --drawer-width: 336px;
+    --drawer-pad: 24px;
+  }
+}
+
+@media (max-width: 900px) {
+  :root {
+    --drawer-width: 320px;
+    --drawer-pad: 22px;
+  }
+
+  .masthead {
+    top: 18px;
+    left: 20px;
+    gap: 14px;
+  }
+
+  .masthead__title {
+    font-size: 18px;
+    letter-spacing: 0.2em;
+  }
+
+  .state-strip {
+    left: 20px;
+    bottom: 16px;
+    max-width: 60vw;
+  }
+}
+
+/* 窄屏：抽屉改为下方抽屉，避免遮挡镜中人物 */
+@media (max-width: 760px) {
+  .drawer {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: min(58vh, 540px);
+    border-left: 0;
+    border-top: 1px solid rgba(165, 138, 97, 0.55);
+    box-shadow: 0 -22px 44px -30px rgba(62, 42, 28, 0.6);
+    transform: translateY(101.5%);
+  }
+
+  .drawer.is-open {
+    transform: translateY(0);
+  }
+
+  .drawer__head {
+    padding-top: 20px;
+  }
+
+  .drawer__foot {
+    padding-bottom: 20px;
+  }
+
+  .state-strip {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer,
+  .hotspot,
+  .opt,
+  .portrait__layer {
+    transition-duration: 1ms !important;
+  }
+}
